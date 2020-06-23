@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "collabo.wato.springboot.web.divideskill.mapper.DivideMapper">
+
+	<!-- 기능등록  -->
+	<insert id="insertDivide" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO  "CS"."cs_func"
+		(
+				cs_func_id 
+			,	title 	   
+			,	detail     
+			,	url        
+			,	ver	   
+			,	cnt 	   
+			,	cs_like  
+			,	filepath  
+			,	delyn  
+			,	create_dt  
+			,	create_user 
+			,	own
+		)
+		VALUES
+		(
+			(select count(cs_func_id)+1 from "CS".cs_func)
+			,	#{title}
+			,	#{detail}
+			,	#{url}
+			,    0
+			,    0
+			,    0
+			,   #{filepath}
+			,   'N'
+			,   now()
+			,   #{create_user}	
+			,	#{own}
+		)
+			
+	</insert>
+	
+	<!-- 기능 조회 -->
+	<select id = "selectDivide" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT 
+				cs_func_id
+			,	title 	  
+			,	detail    
+			,	ver       
+			,	url    	  
+			,	cnt 	  
+			,	cs_like   
+			,	filepath  
+			,	delyn     
+			,	create_dt 
+			,	create_user
+			,	own
+		FROM "CS"."cs_func"
+		<where>
+			AND 1=1
+			AND	delyn  <![CDATA[<>]]> 'N'
+				<if test="cs_func_id != '' and cs_func_id != null">
+                  	AND cs_func_id = #{cs_func_id}
+				</if>
+				<if test="nickname != '' and nickname != null">
+                  	AND create_user = #{nickname}
+				</if>
+				<if test = "title != '' and title != null">
+					AND	title LIKE '%'||#{title}||'%'
+				</if>
+		</where>	
+				order by cs_func_id::int ASC
+			
+	</select>
+	
+	<!-- 기능 수정 -->
+	<update id = "updateDivide" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		<set>
+			<if test = "title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test = "detail != null and detail != ''">
+				detail = #{detail},
+			</if>
+			<if test = "url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test = "filepath != null and filepath != ''">
+				filepath = #{filepath},
+			</if>
+			<if test = "delyn != null and delyn != ''">
+				delyn = #{delyn},
+			</if>
+			<if test = "own != null and own != ''">
+				own = #{own},
+			</if>
+			<if test = "ver != null and ver != ''">
+				ver =  ver + #{ver},
+			</if>
+					
+			update_dt = NOW(),
+			update_user = #{nickname}
+		</set>
+			WHERE 1=1
+			<if test = "cs_func_id != null and cs_func_id != ''">
+				AND cs_func_id = #{cs_func_id}
+			</if>
+	
+	</update>
+	
+	
+	<!-- 기능삭제  -->
+	<update id="deleteDivide" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET delyn = 'N'
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	
+	</update>
+	
+	<!-- 코드 등록  -->
+	<insert id="upsertDivideMirror" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO  "CS"."cs_func_mirror"
+		(
+				cs_func_id 
+			,	cs_html
+			,	cs_css
+			,	cs_js
+			,	cs_other
+			,	cs_etc
+			,	cs_lib
+			,	create_dt  
+			,	create_user 
+		)
+		VALUES
+		(
+				#{cs_func_id}
+			,	#{cs_html}
+			,	#{cs_css}
+			,	#{cs_js}
+			,	#{cs_other}
+			,	#{cs_etc}
+			,	#{cs_lib}
+			,   now()
+			,   #{create_user}	
+		)
+			ON CONFLICT ( cs_func_id )
+			
+		DO UPDATE SET
+		
+			 cs_html = #{cs_html}
+			,cs_css = #{cs_css}
+			,cs_js = #{cs_js}
+			,cs_other = #{cs_other}
+			,cs_etc = #{cs_etc}
+			,cs_lib = #{cs_lib}
+			,update_dt = now()
+		
+	</insert>
+	
+	<!-- 에디터코드 조회 -->
+	<select id = "selectDivideMirror" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT 
+				cs_func_id 
+			,	cs_html
+			,	cs_css
+			,	cs_js
+			,	cs_other
+			,	cs_etc
+			,	cs_lib
+			,	create_dt  
+			,	create_user 
+			
+		FROM "CS"."cs_func_mirror"
+		<where>
+			AND 1=1
+				<if test="cs_func_id != '' and cs_func_id != null">
+                  	AND cs_func_id = #{cs_func_id}
+				</if>
+		</where>	
+				order by cs_func_id::int ASC
+			
+	</select>
+	
+	<!-- 점검중인 기능조회 -->
+	<select id = "unlookStop" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT 
+				cs_func_id
+			,	title 	  
+			,	detail    
+			,	ver       
+			,	url    	  
+			,	cnt 	  
+			,	cs_like   
+			,	filepath  
+			,	delyn     
+			,	create_dt 
+			,	create_user
+			,	own
+		FROM "CS"."cs_func"
+		<where>
+			AND 1=1
+			AND	delyn  <![CDATA[<>]]> 'Y'
+				<if test="nickname != '' and nickname != null">
+                  	AND create_user = #{nickname}
+				</if>
+				<if test="cs_func_id != '' and cs_func_id != null">
+                  	AND cs_func_id = #{cs_func_id}
+				</if>
+		</where>	
+				order by cs_func_id::int ASC
+	</select>
+	
+	<!-- 조회수 증가  -->
+	<update id="increaseView" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET cnt = cnt + 1
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	</update>
+	
+	<!-- 좋아요 감소 -->
+	<update id = "minusLike" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET cs_like = cs_like - 1
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	</update>
+	
+	<!-- 좋아요 증가 -->
+	<update id = "plusLike" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET cs_like = cs_like + 1
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	</update>
+	
+	<!-- 회원이 좋아요 눌럿을때 최초 등록 -->
+	<insert id = "insertLike" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO "CS"."user_like"
+		(		
+				 like_title 
+			,	 like_email
+			, 	 like_nickname 
+			,	 like_like 
+			,	 like_create_dt
+		)VALUES
+		(		
+				#{title}
+			,	#{like_email}
+			,	#{like_nickname}
+			,	#{like_like}
+			,	NOW()	
+		)
+	</insert>
+	
+	<select id = "selectLike" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT 
+				 like_title
+			,	 like_email
+			,	 like_nickname 
+			,	 like_like 
+			,	 like_create_dt
+			
+		FROM "CS"."user_like"
+		<where>
+			AND 1=1
+				<if test = "like_email != null and like_email != ''">
+					AND like_email = #{like_email}
+				</if>
+				<if test = "nickname != null and nickname != ''">
+					AND like_nickname = #{nickname}
+				</if>
+		</where>
+			order by like_like::int ASC
+	</select>
+	
+	<!-- 좋아요 삭제하는 쿼리 -->
+	<update id = "deleteLike" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		DELETE 
+			FROM "CS"."user_like"
+		WHERE 
+			like_like = #{like_like} AND like_nickname = #{like_nickname}
+	</update>
+	
+	<!-- 커뮤니티 게시글 조회 -->
+	<select id = "selectCommunity" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT
+				com_count 
+			,	com_title		 
+			,	com_detail
+			,	com_nickname 
+			,	com_create_dt 
+			,	com_cnt 
+			,	com_like 
+			
+		FROM "CS"."community"
+			order by com_count::int ASC
+	
+	</select>
+		
+	<!-- 커뮤니티 게시글 등록 -->
+	<insert id = "insertCommunity" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO "CS"."community"
+		(		 com_count
+			,	 com_title 
+			,	 com_detail
+			, 	 com_nickname
+			,	 com_create_dt
+			,	 com_cnt
+			,	 com_like
+		)VALUES
+		(	
+				(select count(com_count)+1 from "CS"."community")	
+			,	#{com_title}
+			,	#{com_detail}
+			,	#{com_nickname}
+			,	NOW()
+			,   0
+			,	0
+		);
+	
+	</insert>	
+	
+	<!-- 커뮤니티 추천 증가 -->
+	<update id = "communityCntPlus" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."community"
+		   SET com_like = com_like + 1
+		 WHERE 1=1
+		   AND com_count = #{com_count}
+	</update>
+					
+	<!-- 커뮤니티 추천 감소 -->
+	<update id = "communityCntMinus" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."community"
+		   SET com_like = com_like - 1
+		 WHERE 1=1
+		   AND com_count = #{com_count}
+	</update>	
+	
+	<!-- 커뮤니티 추천 등록 -->
+	<insert id = "insertCommunityCnt" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO "CS"."community_like"
+		(		 recommen_number
+			,	 recommen_title 
+			,	 recommen_detail
+			, 	 recommen_nickname
+			,	 recommen_create_dt
+	
+		)VALUES
+		(	
+				#{recommen_number}	
+			,	#{recommen_title}
+			,	#{recommen_detail}
+			,	#{recommen_nickname}	
+			,	NOW()
+		);
+	</insert>
+	
+	<!-- 커뮤니티 추천 삭제 --> <!-- 사용 안하는것 같음. -->
+	<update id = "deletetCommunityCnt" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		DELETE 
+			FROM "CS"."community_like"
+		WHERE 
+			recommen_number = #{recommen_number} AND recommen_nickname = #{recommen_nickname}
+	</update>	
+	
+	<!-- 커뮤니티 추천만 관리하는 정보 조회 -->
+	<select id = "selectCommunityCnt" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT
+				recommen_number 
+			,	recommen_title		 
+			,	recommen_detail
+			,	recommen_nickname 
+			,	recommen_create_dt 
+		FROM "CS"."community_like"
+			<where>
+				AND 1=1
+				<if test = "recommen_nickname !=null and recommen_nickname != ''">
+					AND	recommen_nickname = #{recommen_nickname}
+				</if>
+			</where>
+		
+			order by recommen_number::int ASC
+	</select>		
+	
+	<!-- 히스토리 등록 -->
+	<insert id = "inserthistory" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		INSERT INTO "CS"."history"
+		(		history_id 			
+			,	history_title 		
+			,	history_detail 		
+			,	history_filepath 	
+			,	history_nickname 	
+			,	history_ver 		
+			,	history_create_dt 	
+	
+		)VALUES
+		(	
+				#{history_id}	
+			,	#{history_title}
+			,	#{history_detail}
+			,	#{history_filepath}	
+			,	#{history_nickname}	
+			,	#{history_ver}	
+			,	NOW()
+		);
+	
+	</insert>
+	
+	<!-- 히스토리 등록시 버전UP -->
+	<update id = "verPlus" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET ver = ver + 1
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	</update>
+	
+	<select id = "selectHistoryDetail" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO" resultType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		SELECT
+					history_id 			
+				,	history_title 		
+				,	history_detail 		
+				,	history_filepath	
+				,	history_nickname 	
+				,	history_ver 		
+				,	history_create_dt 		
+			
+		FROM "CS"."history"
+			<where>
+				AND 1=1
+				<if test = "history_id !=null and history_id != ''">
+					AND	history_id = #{history_id}
+				</if>
+				<if test = "history_ver !=null and history_ver != ''">
+					AND	history_ver = #{history_ver} AND history_id = #{history_id}
+				</if>
+			</where>
+		
+			order by history_ver::int ASC
+	</select>
+	
+	<!-- history 정보 수정 -->
+	<update id = "updateHistory" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."history"
+		<set>	
+			<if test = "history_title != null and history_title != ''">
+				history_title = #{history_title},
+			</if>
+			<if test = "history_detail != null and history_detail != ''">
+				history_detail = #{history_detail},
+			</if>
+			<if test = "history_filepath != null and history_filepath != ''">
+				history_filepath = #{history_filepath},
+			</if>
+			
+			history_update_dt = NOW()
+		</set>
+			WHERE 1=1
+			<if test = "history_id != null and history_id != ''">
+				AND history_id = #{history_id} AND history_ver = #{history_ver} 
+			</if>
+	</update>
+	
+	<!-- 히스토리 삭제  -->
+	<delete id= "historyDelete" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		DELETE from "CS"."history"
+			<where>
+				<if test = "history_id != '' and history_id != null and history_ver != '' and history_ver != null">
+					history_id = #{history_id} AND history_ver = #{history_ver} 
+				</if>
+			</where>
+	</delete>
+	
+	<!-- 히스토리 등록시 버전Dwon -->
+	<update id = "verMinus" parameterType="collabo.wato.springboot.web.divideskill.vo.DivideVO">
+		UPDATE "CS"."cs_func"
+		   SET ver = ver - 1
+		 WHERE 1=1
+		   AND cs_func_id = #{cs_func_id}
+	</update>
+	
+</mapper>
