@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri = "http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html>
 <html style = "background-color: #585858;">
 <head>
@@ -103,7 +105,12 @@
 							<li class="swatch" style = "width: 205px;">
 								<div class="swatch-color color-ruby">
 									<a onclick = "letgo('${list.cs_func_id}')">
-										<img src = "/board/img?project=codingstreet&path=${list.filepath}" style = "width: 200px; height:170px; cursor: pointer;">
+										<c:if test = "${fn:contains(list.filepath,'jpg') }">
+											<img src = "/board/img?project=codingstreet&path=${list.filepath}" style = "width: 205px; height:170px; cursor: pointer;">
+										</c:if>
+										<c:if test = "${!fn:contains(list.filepath,'jpg') }">
+											<img src = "/board/img?project=codingstreet&path=noimage.jpg" style = "width: 205px; height:170px; cursor: pointer;">
+										</c:if>
 									</a>
 								</div>
 								<div class="skill_menu" style = "height:75px;">
