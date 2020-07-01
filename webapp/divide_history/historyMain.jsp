@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -113,7 +114,7 @@
 				    <form class="form-wrapper cf" action = "/mainSearch">
 					  	<input type="text" name = "serachValue" placeholder="search here..." required>
 					  	<input type = "hidden" name = "search" value = "historySearch">
-						 <button type="submit">검색</button>
+						<button type="submit">검색</button>
 					</form>
 	
 					<div>
@@ -121,8 +122,13 @@
 						<c:forEach var="list" items="${list}">
 							<li class="swatch" style = "width: 205px;">
 								<div class="swatch-color color-ruby">
-									<a onclick = "letgo('${list.cs_func_id}')">
-										<img src = "/board/img?project=codingstreet&path=${list.filepath}" style = "width: 200px; height:170px; cursor: pointer;">
+									<a onclick = "letgo('${list.cs_func_id}')">	
+										<c:if test = "${fn:contains(list.filepath,'jpg') }">
+											<img src = "/board/img?project=codingstreet&path=${list.filepath}" style = "width: 205px; height:170px; cursor: pointer;">
+										</c:if>
+										<c:if test = "${!fn:contains(list.filepath,'jpg') }">
+											<img src = "/board/img?project=codingstreet&path=noimage.jpg" style = "width: 205px; height:170px; cursor: pointer;">
+										</c:if>		
 									</a>
 								</div>
 								<div class="skill_menu" style = "height:75px;">
