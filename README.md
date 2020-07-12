@@ -32,6 +32,10 @@ ex) codepen.io 같은 오픈 에디터 소스
 
 ● 미숙한 응용력은 다양한 방법으로 시도함으로써의 응용력 향상
 
+# DBtable 정의서
+![DB테이블정의서.PNG](./resource/readmeimg/DB테이블정의서.PNG)
+
+
 # USECASE 
 ● 회원 :
          ● 기능 게시글을 작성, 수정, 점검중 으로 할 수 있다.
