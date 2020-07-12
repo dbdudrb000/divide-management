@@ -35,8 +35,13 @@ ex) codepen.io 같은 오픈 에디터 소스
 # DBtable 정의서
 ![DB테이블정의서.PNG](./resource/readmeimg/DB테이블정의서.PNG)
 
+# DBdiagrame
+![DBdiagrame.PNG](./resource/readmeimg/DBdiagrame.PNG)
+
 
 # USECASE 
+![divideUML.PNG](./resource/readmeimg/divideUML.PNG)
+
 ● 회원 :
          ● 기능 게시글을 작성, 수정, 점검중 으로 할 수 있다.
          ● 등록한 기능게시글에 나의 기능을 URL첨부, 직접 에디터 작성 둘중 1가지 방법으로 첨부 가능하다.
