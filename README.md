@@ -1,3 +1,29 @@
+# 개요
+● 프로젝트명 : Hotplace
+
+● 일정 : 2020.6.1 ~ 2020.07.1
+
+● 팀구성 : 유영규
+
+● 목적 : 사용자가 사용할 수 있는 기능들을 다른 사용자와 공유할 수 있는 프로젝트이다.
+    ○ 에디터 라이브러리 사용
+    
+    ○ 내가 에디터로 직접 기능들을 구현할 수 있으며, 만들어져 있는 URL첨부로
+      공유할 수 있는 방법2가지로 나뉘어진다.
+
+● 사용기술 및 개발환경
+        ○ O/S : Windows 10(개발환경) 
+
+        ○ Server : Tomcat8.5
+
+        ○ DB : PostgreSQL
+
+        ○ Pramework : Spring boot, Jquery, mybatis
+
+        ○ Programming Language : JAVA, HTML, Javascript, CSS
+        
+        ○ Tool : Eclipse
+
 # 목적
 ● 내가 사용할 수 있는 기능들을 다른 사람들과 공유하고자 생성된 프로젝트
 
