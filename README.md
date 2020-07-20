@@ -59,6 +59,9 @@ ex) codepen.io 같은 오픈 에디터 소스
 
 ● 미숙한 응용력은 다양한 방법으로 시도함으로써의 응용력 향상
 
+# 메인화면
+![repimg.PNG](./resource/readmeimg/repimg.PNG)
+
 # DBtable 정의서
 ![DB테이블정의서.PNG](./resource/readmeimg/DB테이블정의서.PNG)
 
